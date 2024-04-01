@@ -26,32 +26,23 @@ echo "Guess the secret number between 1 and 1000:"
 
 while read GUESS
 do
-  if [[ $GUESS -lt $RANDOM_NUM ]]
-    then
-      echo "It's higher than that, guess again:"
-  if [[ $GUESS -gt $RANDOM_NUM ]]
-  then
-      echo "It's lower than that, guess again:"
-  if [[ $GUESS -eq $RANDOM_NUM ]]
-  then
-      echo You guessed it in $COUNT tries. The secret number was $RANDOM_NUM. Nice job!
-      exit
-
   if [[ ! $GUESS =~ ^[0-9]+$ ]]
     then
-    echo "That is not an integer, guess again:"
+      echo -n "That is not an integer, guess again:"
+  else
+  if [[ $GUESS -lt $RANDOM_NUM ]]
+    then
+      echo -n "It's higher than that, guess again:"
+  elif [[ $GUESS -gt $RANDOM_NUM ]]
+    then
+      echo -n "It's lower than that, guess again:"
+  elif [[ $GUESS -eq $RANDOM_NUM ]]
+    then
+      break
     fi
     fi
-    fi
-  fi
   COUNT=$(( $COUNT + 1 ))
   done
 
-
-
-
-
-
-
-
-USER_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id)  VALUES($COUNT, $USER_ID))"
+echo You guessed it in $COUNT tries. The secret number was $RANDOM_NUM. Nice job!
+USER_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id) VALUES($COUNT, $USER_ID)")
