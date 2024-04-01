@@ -7,15 +7,15 @@ echo -e "\n~~~Number Guessing Game ~~~\n"
 echo Enter your username:
 read USERNAME
 
-RETURNING_USER=$($PSQL "SELECT username FROM users WHERE username = '$USERNAME'")
-USER_ID=$($PSQL "SELECT user_id FROM users WHERE username = '$USERNAME'")
-GAMES_PLAYED=$($PSQL "SELECT COUNT(game_id) FROM games WHERE user_id = $USER_ID")
-BEST_GAME=$($PSQL "SELECT MIN(num_of_guesses) FROM games WHERE user_id = $USER_ID")
+RETURNING_USER=$($PSQL "SELECT username FROM users WHERE username = '$USERNAME';")
+USER_ID=$($PSQL "SELECT user_id FROM users WHERE username = '$USERNAME';")
+GAMES_PLAYED=$($PSQL "SELECT COUNT(game_id) FROM games WHERE user_id = $USER_ID;")
+BEST_GAME=$($PSQL "SELECT MIN(num_of_guesses) FROM games WHERE user_id = $USER_ID;")
 
 if [[ -z $RETURNING_USER ]]
   then
     echo "Welcome, $USERNAME! It looks like this is your first time here."
-    INSERT_NEW_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
+    INSERT_NEW_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME');")
   else
   echo Welcome back, $RETURNING_USER! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses.
 fi
@@ -43,7 +43,7 @@ do
   GUESS_COUNT=$(( $GUESS_COUNT+1 ))
   done
   
-USER_WIN_ID=$($PSQL "SELECT user_id FROM users WHERE username = '$USERNAME'")
-USER_GAME_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id) VALUES($GUESS_COUNT, $USER_WIN_ID)")
+USER_WIN_ID=$($PSQL "SELECT user_id FROM users WHERE username = '$USERNAME';")
+USER_GAME_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id) VALUES($GUESS_COUNT, $USER_WIN_ID);")
 
 echo "You guessed it in $GUESS_COUNT tries. The secret number was $RANDOM_NUM. Nice job!"
