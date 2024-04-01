@@ -25,6 +25,7 @@ echo Guess the secret number between 1 and 1000:
 
 while read GUESS
 do
+  GUESS_COUNT=$(( $GUESS_COUNT+1 ))
   if [[ ! $GUESS =~ ^[0-9]+$ ]]
     then
       echo -n That is not an integer, guess again:
@@ -40,7 +41,6 @@ do
       break
     fi
   fi
-  GUESS_COUNT=$(( $GUESS_COUNT+1 ))
   done
   
 USER_WIN_ID=$($PSQL "SELECT user_id FROM users WHERE username = '$USERNAME';")
