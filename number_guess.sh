@@ -14,20 +14,20 @@ BEST_GAME=$($PSQL "SELECT MIN(num_of_guesses) FROM games WHERE user_id = $USER_I
 
 if [[ -z $RETURNING_USER ]]
   then
-  INSERT_NEW_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
-    echo Welcome, $USERNAME! It looks like this is your first time here.
+    echo "Welcome, $USERNAME! It looks like this is your first time here."
+    INSERT_NEW_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
   else
-  echo Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses.
+  echo Welcome back, $RETURNING_USER! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses.
 fi
 
 RANDOM_NUM=$((1 + $RANDOM % 1000))
-echo "Guess the secret number between 1 and 1000:"
+echo Guess the secret number between 1 and 1000:
 
 while read GUESS
 do
   if [[ ! $GUESS =~ ^[0-9]+$ ]]
     then
-      echo -n "That is not an integer, guess again:"
+      echo -n That is not an integer, guess again:
   else
   if [[ $GUESS -lt $RANDOM_NUM ]]
     then
@@ -37,11 +37,13 @@ do
       echo -n "It's lower than that, guess again:"
   elif [[ $GUESS -eq $RANDOM_NUM ]]
     then
-    echo "You guessed it in $COUNT tries. The secret number was $RANDOM_NUM. Nice job!"
       break
     fi
   fi
-  COUNT=$(( $COUNT + 1 ))
+  GUESS_COUNT=$(( $GUESS_COUNT+1 ))
   done
-USER_GAME_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id) VALUES($COUNT, $USER_ID)")
-exit
+  
+USER_WIN_ID=$($PSQL "SELECT user_id FROM users WHERE username = '$USERNAME'")
+USER_GAME_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id) VALUES($GUESS_COUNT, $USER_WIN_ID)")
+
+echo "You guessed it in $GUESS_COUNT tries. The secret number was $RANDOM_NUM. Nice job!"
