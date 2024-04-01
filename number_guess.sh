@@ -45,4 +45,4 @@ do
   done
 
 echo You guessed it in $COUNT tries. The secret number was $RANDOM_NUM. Nice job!
-USER_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id) VALUES($COUNT, $USER_ID)")
+USER_INFO=$($PSQL "INSERT INTO games (num_of_guesses,user_id) VALUES($COUNT, $USER_ID)") 
